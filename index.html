@@ -1,18 +1,74 @@
 ---
 layout: default
 ---
-
 <div class="posts">
   {% for post in site.posts %}
-    <article class="post">
+      <div class="entry" >
+        <div class="title">
+          <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h1>
+        </div>
 
-      <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h1>
+        {% if post.data or post.img %}
+        <div class = "graphics">
+          <p>
+            {% if post.data %}
+              <object  data="{{ site.baseurl }}/{{ post.data }}"></object>
+            {% endif %}
+            {% if post.img %}
+              <img src="{{ site.baseurl }}/{{ post.img }}">
+            {% endif %}
+          </p>
+        </div>
+        {% endif %}
 
-      <div class="entry">
-        {{ post.excerpt }}
+        <div class = "abstract">
+          <h3>Abstract</h3>
+            <p >
+              {{ post.summary }}
+              <br>
+              <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
+            </p>
+        </div>
+
+
+        {% if post.co_authors %}
+          <div class = "collaborators">
+          <h3>In collaboration with</h3>
+            <p >
+              {% for a in post.co_authors %}
+                {% assign out = forloop.index %}
+                {% for l in post.co_authors_web %}
+                    {% assign in = forloop.index %}
+                    {% if in == out %}
+                      {% if l == 'none' %}
+                        <a href="" class="no-link">{{ a }}</a>
+                      {% else %}
+                        <a href="{{ l }}" class="read-more">{{ a }}</a>
+                      {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    <br>
+              {% endfor %}
+            </p>
+          </div>
+        {% endif %}
+
+
+        {% if post.link %}
+          <div  class = "links">
+            <h3>Links</h3>
+              {% for link in post.link %}
+                {% assign out = forloop.index %}
+                {% for l in post.link_message %}
+                    {% assign in = forloop.index %}
+                    {% if in == out %}
+                      <a href="{{ site.baseurl }}{{ link }}" class="read-more" target="_blank">{{ l }}</a>
+                    {% endif %}
+                {% endfor %}
+                <br>
+              {% endfor %}
+          </div>
+        {% endif %}
       </div>
-
-      <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
-    </article>
   {% endfor %}
 </div>
