@@ -30,6 +30,27 @@ layout: default
             </p>
         </div>
 
+        {% if post.authors %}
+          <div class = "collaborators">
+          <h3>Authored by</h3>
+            <p>
+              {% for a in post.authors %}
+                {% assign out = forloop.index %}
+                {% for l in post.authors_web %}
+                    {% assign in = forloop.index %}
+                    {% if in == out %}
+                      {% if l == 'none' %}
+                        <a href="" class="no-link">{{ a }}</a>
+                      {% else %}
+                        <a href="{{ l }}" class="read-more">{{ a }}</a>
+                      {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    <br>
+              {% endfor %}
+            </p>
+          </div>
+        {% endif %}
 
         {% if post.co_authors %}
           <div class = "collaborators">

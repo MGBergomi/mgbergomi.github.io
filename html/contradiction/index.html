@@ -1,0 +1,342 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="js/reveal.js/css/reveal.css">
+        <link rel="stylesheet" href="js/reveal.js/css/theme/black.css">
+        <style>
+        @import url('https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300');
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section class="fig-container"
+                        data-fig-id="fig-opening"
+                        data-file="html/game_of_life.html"
+                        data-transitions="0">
+                        <h2>Does intelligence imply contradiction?</h2>
+                        <h5>Patrizio Frosini</h5>
+                        <p>Received 19 June 2002; reveiced in revised form 30 July 2007</p>
+                </section>
+
+                <section style="text-align: left;">
+                    <h3>Introduction</h3>
+
+                    <h4>Idea</h4>
+                    <p>
+                        Is contradiction accidental, or is it the necessary companion of intelligence?
+
+                        <br>
+                        Thesis: Contradiction can be seen as a tool to increase intelligence in biological
+                        systems.
+                    </p>
+
+                    <h4>Why is this relevant?</h4>
+                    <p>
+                        A mathematically sound answer to this question could give new perspectives on artificial intelligence.
+                        Think for instance about modern loss functions as
+                    <p>
+                        <p style="text-align: left;">
+                            <img width="50%" border="0" data-src="./imgs/embedding.png" alt="pers" style="float: left;">
+                            <p style="margin-left: 1em;float: right;width: 50%;text-align: middle;">
+                            <ul >
+                                <li>Contrastive</li>
+                                <li>Triplet</li>
+                                <li>Adversarial</li>
+                                <li>Capsules</li>
+                            </ul>
+                        </p>
+                        </p>
+
+                </section>
+
+                <section  style="text-align: left;">
+                    <h3>A brief history of contradiction</h3>
+                        <h4>Philosophy</h4>
+                        <h6>Wittgenstein; Heidegger</h6>
+
+                        <h4>Mathematics and computer science</h4>
+                            <ul style="margin-top: 1px;">
+                                <li>Second theorem</li>
+                                <li>Many-valued systems</li>
+                            </ul>
+                        <h6>G&ouml;del (1930); Dunn, J. M. (1976).</h6>
+                        <h4>Psychology</h4>
+                            <ul  style="margin-top: 1px;">
+                                <li>Cognitive dissonance</li>
+                                <li>Time-inconsistent agent</li>
+                            </ul>
+                        <h6 margin-bottom: 10em>Festinger, L. (1957).</h6>
+                </section>
+
+                <section  style="text-align: left;">
+                    <h3>Intuition</h3>
+                    <p style='margin-bottom: 30em'>
+                        A contradiction is an observed phenomenon in which the same
+                        entity evolves in two different ways (in different times) from the
+                        same initial state.
+                        <br>
+                        <img width="50%" border="0" data-src="./imgs/multiverse.gif" alt="pers" style="float: left;">
+                    </p>
+                </section>
+
+                <section  style="text-align: left;">
+                    <h3>Framework</h3>
+
+                    <h4>What shall be defined</h4>
+                    <p>
+                        A <b>contradiction</b> is an <b>observed phenomenon</b> in which the same
+                        <b>entity</b> evolves in two different ways (in different times) from the
+                        same <b>initial state</b>.
+                    </p>
+                    <h4>Counter-argument</h4>
+                    <p>
+                        <ul style="margin-top: 1px;">
+                            <li>Different answers are caused by different mind states?</li>
+                            <li>The question is posed or perceived in a different way?</li>
+                        </ul>
+                    </p>
+                    <h4>Formalism</h4>
+                    <p style='margin-bottom: 10em; float: left; width:50%'>
+                        $\left(\mbox{Observer}, \mbox{Event}\right)$
+                    </p>
+                    <img width="40%" border="0" data-src="./imgs/flat.gif" alt="pers" style="float: left;">
+                </section>
+
+                <section  style="text-align: left;">
+                    <h3>Main theorem</h3>
+                    <p style='margin-bottom: 10em'>
+                        Any sufficiently intelligent entity must be contradictory
+                        <br>
+                        <img width="47%" border="0" data-src="./imgs/penrose.gif" alt="pers" style="float: left; margin-right: 1em; margin-top: 3em;">
+                        <img width="47%" border="0" data-src="./imgs/contradiction.gif" alt="pers" style="float: left; margin-top: 3em;">
+                        <br>
+                        <b>Observation</b>: intelligence needs a context, and an observer in order to be studied.
+                        <br>
+                        <br>
+                        Thus, a quantum-mechanic  flavoured replacement has to be put in place:
+                        $$\mbox{particle}\mapsto\mbox{observed particle}$$
+                    </p>
+                </section>
+
+                <section  style="text-align: left;">
+                    <h3>Framework for testing</h3>
+                    <p>
+                        Entity, environment, intelligence, contradiction can be defined in the fairly general contex of cellular automata
+                        Furthermore, cellular automata have the property of universal computation.
+                        <h6>Wolfram (1994)</h6>
+                    </p>
+                    <video width="90%" controls style='margin-bottom: 10em'>
+                    <source src="./videos/test__.mp4" type="video/mp4">
+                    </video>
+                </section>
+
+                <section  style="text-align: left;">
+                    <h3>Framework and epistemology</h3>
+                    <p>
+                        <b>Def [Existence]</b>: The existence of an entity depends exclusively on the observer.
+                        <br>
+                        <br>
+                        <i>Caveat</i>: Here the subjectivity of existence is not to be discussed. We should rather
+                        decide to take it into account or not.
+                    </p>
+                    <h6>Mc Ginn (1983). <i>The subjective view</i> </h6>
+                    <p >
+                        <b>Def [Observer]</b>: Let $\mathcal{P}_{ent}$ and $\mathcal{P}_{ENV}$ be non-empty, finite sets
+                        of perceptible states for an entity and an environment, respectively. Assume that it exists a
+                        privileged element $0\in\mathcal{P}_{ent}$. An observer is any function
+                        $$\square = \left(ps_{ent}, ps_{ENV}\right):\Sigma\rightarrow \mathcal{P}_{ent}\times\mathcal{P}_{ENV}$$
+                        <br>
+                        <br>
+                        <b>Observations</b>
+                        <ul style='margin-bottom: 10em'>
+                            <li> The observer acts as an encoder</li>
+                            <li> $0\in\mathcal{P}_{ent}$ to encode absence</li>
+                            <li> The two sets need to be finite, because observer are not allowed infinite memory,
+                                nor computational capability.</li>
+                        </ul>
+                    </p>
+
+                </section>
+
+                <section  style="text-align: left;" >
+                    <h3>Framework and epistemology</h3>
+                    <p>
+                        <b>Def [Existence]</b>: The existence of an entity depends exclusively on the observer.
+                        <br>
+                        <br>
+                        <i>Caveat</i>: Here the subjectivity of existence is not to be discussed. We should rather
+                        decide to take it into account or not.
+                    </p>
+                    <h6>Mc Ginn (1983). <i>The subjective view</i> </h6>
+                    <p style='margin-bottom: 10em'>
+                        <b>Def [Observer]</b>: Let $\mathcal{P}_{ent}$ and $\mathcal{P}_{ENV}$ be non-empty, finite sets
+                        of perceptible states for an entity and an environment, respectively. Assume that it exists a
+                        privileged element $0\in\mathcal{P}_{ent}$. An observer is any function
+                        $$\square = \left(ps_{ent}, ps_{ENV}\right):\Sigma\rightarrow \mathcal{P}_{ent}\times\mathcal{P}_{ENV}$$
+                        <br>
+                        <b>Def [Entity &amp lifetime]</b>: Each maximal sequence of consecutive perceived states in
+                        $\mathcal{P}_{ent}\setminus\left\{0\right\}$, say $\left\{ ps_{ent}\left(s_{t+i}\right) \right\}_{i=0}^q$ is
+                        an entity. The set $\left\{t, \dots, t+q\right\}$ is the lifetime of the entity.
+                        <img width="20%" border="0" data-src="./imgs/glider.gif" alt="pers" style="float: left; margin-top: 1em;">
+                    </p>
+
+
+
+                </section>
+
+                <section  style="text-align: left;" >
+                    <h3>Framework and epistemology</h3>
+                    <p>
+                        <b>Def [Environment]</b>: Let $\varepsilon = \left(ps_{ent}\left(s_{t} \right), \dots, ps_{ent}\left(s_{t+q} \right)\right)$
+                        be an entity. We call environment $\left(ps_{ENV}\left(s_{t} \right), \dots, ps_{ENV}\left(s_{t+q} \right)\right)$
+
+                    </p>
+                    <p>
+                        <b>Def [Intelligence]</b>: Given an entity $\varepsilon = \left(ps_{ent}\left(s_{t} \right), \dots, ps_{ent}\left(s_{t+q} \right)\right)$
+                        with respect to the observer $\square$, we define the intelligence $L\left(\varepsilon, \square\right)$ as
+                        the entity's lifetime $q$.
+                    </p>
+                    <h6>Minsky (1986); Turing (1950); Stenberg (1990).</h6>
+                    <p style='margin-bottom: 10em'>
+                        <b>Reminder</b>: An entity is contradictory if faced with the same circumstances
+                        (as perceived by the observer) in two occasions in time, it exhibits different behaviours.
+                        <br>
+                        <br>
+                        <b>Def [Contradictory entity]</b>: Let $\varepsilon = \left(ps_{ent}\left(s_{t} \right), \dots, ps_{ent}\left(s_{t+q} \right)\right)$
+                        be an entity for $\square$. If there exists $a,b\in\mathbb{N}$, $a, b\leq q$, such that
+                        $$
+                        ps_{ENV}\left(s_{t+a} \right) = ps_{ENV}\left(s_{t+b} \right) \mbox{ and } ps_{ent}\left(s_{t+a} \right) \neq ps_{ent}\left(s_{t+b} \right)
+                        $$
+                        then $\varepsilon$ is contradictory.
+
+                    </p>
+
+                </section>
+                <section  style="text-align: left;" >
+                    <h3>Framework and epistemology</h3>
+                    <p>
+                        <b>Def [Environment]</b>: Let $\varepsilon = \left(ps_{ent}\left(s_{t} \right), \dots, ps_{ent}\left(s_{t+q} \right)\right)$
+                        be an entity. We call environment $\left(ps_{ENV}\left(s_{t} \right), \dots, ps_{ENV}\left(s_{t+q} \right)\right)$
+
+                    </p>
+                    <p>
+                        <b>Def [Intelligence]</b>: Given an entity $\varepsilon = \left(ps_{ent}\left(s_{t} \right), \dots, ps_{ent}\left(s_{t+q} \right)\right)$
+                        with respect to the observer $\square$, we define the intelligence $L\left(\varepsilon, \square\right)$ as
+                        the entity's lifetime $q$.
+                    </p>
+                    <p>
+                        <b>Def [Contradictory entity]</b>: Let $\varepsilon = \left(ps_{ent}\left(s_{t} \right), \dots, ps_{ent}\left(s_{t+q} \right)\right)$
+                        be an entity for $\square$. If there exists $a,b\in\mathbb{N}$, $a, b\leq q$, such that
+                        $$
+                        ps_{ENV}\left(s_{t+a} \right) = ps_{ENV}\left(s_{t+b} \right) \mbox{ and } ps_{ent}\left(s_{t+a} \right) \neq ps_{ent}\left(s_{t+b} \right)
+                        $$
+                        then $\varepsilon$ is contradictory.
+                    </p>
+                    <h4>Counter-arguments</h4>
+                    <p style='margin-bottom: 10em'>
+                        How does this fit in the classical formulation of contradictory theory?
+                    </p>
+
+                </section>
+                <section  style="text-align: left;" >
+                    <h3>Framework and epistemology</h3>
+                    <p>
+                        <b>Def [Environment]</b>: Let $\varepsilon = \left(ps_{ent}\left(s_{t} \right), \dots, ps_{ent}\left(s_{t+q} \right)\right)$
+                        be an entity. We call environment $\left(ps_{ENV}\left(s_{t} \right), \dots, ps_{ENV}\left(s_{t+q} \right)\right)$
+
+                    </p>
+                    <p>
+                        <b>Def [Intelligence]</b>: Given an entity $\varepsilon = \left(ps_{ent}\left(s_{t} \right), \dots, ps_{ent}\left(s_{t+q} \right)\right)$
+                        with respect to the observer $\square$, we define the intelligence $L\left(\varepsilon, \square\right)$ as
+                        the entity's lifetime $q$.
+                    </p>
+                    <p style='margin-bottom: 10em'>
+                        <b>Def [Contradictory entity]</b>: Let $\varepsilon = \left(ps_{ent}\left(s_{t} \right), \dots, ps_{ent}\left(s_{t+q} \right)\right)$
+                        be an entity for $\square$. If there exists $a,b\in\mathbb{N}$, $a, b\leq q$, such that
+                        $$
+                        ps_{ENV}\left(s_{t+a} \right) = ps_{ENV}\left(s_{t+b} \right) \mbox{ and } ps_{ent}\left(s_{t+a} \right) \neq ps_{ent}\left(s_{t+b} \right)
+                        $$
+                        then $\varepsilon$ is contradictory.
+                        <br>
+                        <br>
+                        <b>Def [Deterministic environment]</b>: An environment $\left(ps_{ENV}\left(s_{t} \right), \dots, ps_{ENV}\left(s_{t+q} \right)\right)$ is
+                        deterministic if for every $a,b\leq q$ such that
+                        $$
+                        ps_{ENV}\left(s_{t+a} \right) = ps_{ENV}\left(s_{t+b} \right) \mbox{ and } ps_{ent}\left(s_{t+a} \right) = ps_{ent}\left(s_{t+b} \right),
+                        $$
+                        we have $ps_{ENV}\left(s_{t+a+1} \right) = ps_{ENV}\left(s_{t+b+1} \right)$.
+                    </p>
+                </section>
+
+                <section  style="text-align: left;" >
+                    <h3>Theorem and applications</h3>
+                    <p>
+                        Let $\varepsilon$ be an entity with finite lifetime and deterministic environment, with
+                        respect to the observer $\square$, for the cellular automaton $\mathcal{C}$. Let
+                        $k = |\mathcal{P}_{ent}\times\mathcal{P}_{ENV}|$. If the intelligence (lifetime) of
+                        $\varepsilon\geq k$, then $\varepsilon$ must be contradictory.
+                    </p>
+                    <!-- <h4 style="float: left; width: 33%">Up &amp Down</h4>⁠ -->
+                    <h4 style="float: left; width: 33%">Up and down</h4>
+                    <h4 style="float: left; width: 33%">Prisoner dilemma</h4>
+                    <h4 style="float: left; width: 33%">Stockholders and share prices</h4>
+
+                    <p style="float: left;">
+                    <img width="20%" border="0" data-src="./imgs/updown.jpg" alt="pers" style="float: left; margin-right: 13%; margin-top: 0px; margin-bottom: 0px">
+                    <img width="20%" border="0" data-src="./imgs/prisoner_dilemma2.jpeg" alt="pers" style="float: left; margin-right: 13%; margin-top: 0px; margin-bottom: 0px">
+                    <img width="20%" border="0" data-src="./imgs/business.jpeg" alt="pers" style="float: left; margin-right: 13%; margin-top: 0px; margin-bottom: 0px">
+                    </p>
+
+                    <p style="float: left;width: 30%; margin-right: 3%">
+                        $P_i = \left(\mbox{up}, \mbox{down}, \dots\right)$. $P_i$ wins the $k$th round if
+                        $c_{k+1} > c_{k}$ and $P_{i,k} = \mbox{up}$.
+                    </p>
+                    <p style="float: left;width: 30%; margin-right: 3%">
+                        $r_{cc}= 2,\, r_{nn} = 0,$
+                        $r_{nc} = \left\{\begin{matrix}n\mapsto 1,\\ c\mapsto -1\end{matrix}\right.$
+                    </p>
+
+                    <p style="float: left;width: 30%; margin-right: 3%">
+                        $\$ = 10000$, $p\in \{900, 1000, 1100\}$, $t = 7 \mbox{ days}$.
+                    </p>
+
+
+                </section>
+
+            </div>
+        </div>
+
+        <script src="js/reveal.js/lib/js/head.min.js"></script>
+        <script src="js/reveal.js/js/reveal.js"></script>
+        <script>
+            // Full list of configuration options available at:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: false,
+                progress: true,
+                slideNumber: false,
+                history: true,
+                center: true,
+                controlsBackArrows: 'visible',
+                transition: 'fade',
+                math: {
+					mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+					config: 'TeX-AMS_HTML-full',
+				},
+                // Optional reveal.js plugins
+                dependencies: [
+                    // d3.js library and plugin
+                    { src: 'https://d3js.org/d3.v4.min.js' },
+                    { src: 'js/d3js.js' },
+                    { src: 'js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'js/plugin/search/search.js', async: true },
+					{ src: 'js/plugin/zoom-js/zoom.js', async: true },
+                    { src: 'js/plugin/math/math.js', async: true },
+                    { src: 'js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+                ]
+            });
+
+        </script>
+    </body>
+</html>
