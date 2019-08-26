@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - buffergeometry - lines drawcalls</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				color: #000000;
+				font-family:Monospace;
+				font-size:13px;
+				text-align:center;
+
+				background-color: #000000;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			#info {
+				position: absolute;
+				top: 0px; width: 100%;
+				padding: 5px;
+			}
+
+			a {
+
+				color: #bababa;
+			}
+
+		</style>
+	</head>
+	<body>
+
+		<div id="container"></div>
+		<div id="info">
+            <p>A simplicial deformable Tonnetz.</p><p> Use the mouse to orbit (left click rotate, right click traslate) and the keyboard to play.</p>
+		</div>
+        
+	
+
+		<script src="js/libs/dat.gui.min.js"></script>
+		<script src="../build/three.min.js"></script>
+		<script src="js/controls/OrbitControls.js"></script>
+		<script src="js/libs/stats.min.js"></script>
+        <script src="../threex/THREEx.KeyboardState.js"></script>
+        <script src="../inc/shim/Base64.js" type="text/javascript"></script>
+        <script src="../inc/shim/Base64binary.js" type="text/javascript"></script>
+        <script src="../inc/shim/WebAudioAPI.js" type="text/javascript"></script>
+        <!-- shim -->
+        <script src="../inc/shim/Base64.js" type="text/javascript"></script>
+        <script src="../inc/shim/Base64binary.js" type="text/javascript"></script>
+        <script src="../inc/shim/WebAudioAPI.js" type="text/javascript"></script>
+        <script src="../inc/shim/WebMIDIAPI.js" type="text/javascript"></script>
+        <!-- jasmid package -->
+        <script src="../inc/jasmid/stream.js"></script>
+        <script src="../inc/jasmid/midifile.js"></script>
+        <script src="../inc/jasmid/replayer.js"></script>
+        <!-- midi.js package -->
+        <script src="../js/midi/audioDetect.js" type="text/javascript"></script>
+        <script src="../js/midi/gm.js" type="text/javascript"></script>
+        <script src="../js/midi/loader.js" type="text/javascript"></script>
+        <script src="../js/midi/plugin.audiotag.js" type="text/javascript"></script>
+        <script src="../js/midi/plugin.webaudio.js" type="text/javascript"></script>
+        <script src="../js/midi/plugin.webmidi.js" type="text/javascript"></script>
+        <script src="../js/midi/player.js" type="text/javascript"></script>
+        <script src="../js/midi/synesthesia.js" type="text/javascript"></script>
+        <!-- utils -->
+        <script src="../js/util/dom_request_xhr.js" type="text/javascript"></script>
+        <script src="../js/util/dom_request_script.js" type="text/javascript"></script>
+        <!-- includes -->
+        <script src="./inc/timer.js" type="text/javascript"></script>
+        <script src="./inc/colorspace.js" type="text/javascript"></script>
+        <script src="./inc/event.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            MIDI.loadPlugin({
+                soundfontUrl: "./soundfont/",
+                instrument: "acoustic_grand_piano"
+
+            });
+        </script>
+		<script>
+
+			var group;
+			var container, stats;
+			var particlesData = [];
+			var camera, scene, renderer;
+			var positions,colors;
+			var pointCloud;
+			var particlePositions, vertices;
+			var triangles, edges_helper, edges, mesh;
+			var shadow, mesh_s;
+			var plane;
+			
+            var num_of_points_per_line = 12;
+            var num_of_lines = 12;
+            var num_of_triangles = 2 * (num_of_lines - 1) *  ( num_of_points_per_line - 1 );
+            var num_of_edges = 3 * num_of_triangles / 2 + (num_of_lines - 1) + num_of_points_per_line - 1;
+            var faces = [];
+            var num_of_particles = num_of_points_per_line * num_of_lines;
+            var particleCount = num_of_particles;
+            var r = num_of_points_per_line*4;
+			var rHalf = r / 2;
+            var keyboard = new THREEx.KeyboardState();
+            var indices_array = [], pitches_array = [];
+			var effectController = {
+				showVertices: true,
+				showEdges: true,
+                showTriangles: true,
+                showHelper:true,
+                disp_pref: false,
+				view_filt: true,
+				disp_filtr: false,
+				disp_plane: false,
+				filt_height:0.01,
+                play_pause: true,
+                stop: false,
+                song : "1all_the_things_you_are.mid",
+                reset_ton: false
+			}
+            
+            var delay = 0;
+            var velocity = 127;
+            var note, cur_playing=[];
+            var player = MIDI.Player;
+            var pitch = [], message;
+            var  songsToFiles ={
+                                    "All the Things You Are": "3all_the_things_you_are_piano_solo_2_tema.mid",
+                                    "All the Things You Are - Solo" : "3all_the_things_you_are_piano_solo_2_imp.mid",
+                                    "All the Things You Are - Random  Pitches": "3all_the_things_you_are_piano_solo_2_random.mid",
+                                    "Arabesque - Debussy":"arabesqu.mid",
+                                    "Clair de Lune - Debussy": "deb_clai.mid",
+                                    "Drei Klavierstrüke, Op. 11, Mässige - Schönberg": "schoenberg_drei_klavierstucke_11_1.mid",
+                                    "Drei Klavierstrüke, Op. 11, Sehr Iangsam - Schönberg": "schoenberg_drei_klavierstucke_11_2.mid",
+                                    "Drei Klavierstrüke, Op. 11, Bewegte - Schönberg": "schoenberg_drei_klavierstucke_11_3.mid",
+//                                    "Etudes d'exécution trascendentes - Liszt": "liz_et_trans4.mid",
+//                                    "Inventions BWV 772 - Bach": "bwv772.mid",
+//                                    "Inventions BWV 773 - Bach": "bwv773.mid",
+//                                    "Inventions BWV 774 - Bach": "bwv774.mid",
+//                                    "Goldberg Variations": "goldberg.mid",
+//                                    "Gymnopedie No. 1 - Satie": "gymnop01.mid",                                    
+                                    "Jeux d'Eaux - Ravel": "jeuxdeau.mid",
+//                                    "Prélude C# minor, Opus 3/2 - Rachmaninov": "rac_op3_2.mid",
+                                    "Sonata in C major, mov1 - Beethoven": "beet27m1.mid",
+                                    "Sonata in C major, mov2 - Beethoven": "beet27m2.mid",
+                                    "Sonata in C major, mov3 - Beethoven": "beet27m3.mid",
+                                    "Sonata No. 8 D major, KV 311, mov1 - Mozart":"mz_311_1.mid",
+                                    "Sonata No. 8 D major, KV 311, mov2 - Mozart":"mz_311_2.mid",
+                                    "Sonata No. 8 D major, KV 311, mov3 - Mozart":"mz_311_3.mid",
+                                    "Time - Zimmer": "all_time.mid",
+                                    "Test1 - Cmaj": "chords2.mid",
+                                    "Test2 - Cmaj, Cmaj7, Cmaj7(9), Cmaj7(11) ": "chords.mid"
+                                  };
+    
+
+			init();
+			animate();
+
+            function initGUI() {
+
+				var gui = new dat.GUI();
+                
+
+				gui.add( effectController, "showVertices" ).onChange( function( value ) { pointCloud.visible = value; } );
+				gui.add( effectController, "showEdges" ).onChange( function( value ) { edges.visible = value; } );
+                gui.add( effectController, "showTriangles" ).onChange( function( value ) { mesh.visible = value; } );
+                gui.add( effectController, "showHelper" ).onChange( function( value ) { edges_helper.visible = value; } );
+				gui.add( effectController, "disp_filtr" ).onChange( function( value ) { plane.visible = value; } );
+				gui.add( effectController, "filt_height", -1, 10 );
+				gui.add( effectController, "view_filt" ).onChange( function( value ) { plane.visible = value; } );
+                gui.add( effectController, "disp_pref" ).onChange( function( value ) { if (value == true) {disp_pref();  mesh.visible = false;}else{mesh.visible = true}} );
+			    gui.add( effectController, "play_pause" ).onChange( function( value ) { if (value == true) {player.start(); }else{player.pause()}} );
+                gui.add( effectController, "stop" ).onChange( function( value ) {{player.stop(); }} );
+                gui.add( effectController, 'song' ,songsToFiles ).onChange( function( value ) {  player.stop();
+                                        player.loadFile("midi/" + value, player.start); 
+; } );
+                gui.add( effectController, "reset_ton" ).onChange( function( value ) { undeform()} );
+                   
+			}
+            
+            function init() {
+                
+				initGUI();
+				
+				container = document.getElementById( 'container' );
+
+				//
+
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 4000 );
+				camera.position.z = 10;
+                camera.position.x = 0;
+                camera.position.y = -20;
+
+				controls = new THREE.OrbitControls( camera, container );
+
+				scene = new THREE.Scene();
+                scene.fog = new THREE.Fog( 0x050505, 2000, 3500 );
+                var light1 = new THREE.DirectionalLight( 0xffffff, 0.5 );
+				light1.position.set( 100, 100, 100 );
+				scene.add( light1 );
+
+				var light2 = new THREE.DirectionalLight( 0xffffff, 1.5 );
+				light2.position.set( 0, -1, 0 );
+				scene.add( light2 );
+
+				group = new THREE.Group();
+				scene.add( group );
+                
+                positions = new Float32Array( num_of_particles * 3 );
+				colors = new Float32Array( num_of_particles * 3 );
+
+				var pMaterial = new THREE.PointCloudMaterial( {
+					color: 0xffffff,
+					size: 3,
+					blending: THREE.AdditiveBlending,
+					transparent: true,
+					sizeAttenuation: false
+				} );
+
+				particles = new THREE.BufferGeometry();
+				particlePositions = new Float32Array( num_of_particles * 3 );
+                
+                var k = 0;
+				for ( var i = 0; i < num_of_lines; i++ ) {
+                    
+                    for ( var j = 0; j < num_of_points_per_line; j++ ) {
+                        if ( i % 2 == 0 ){
+                            var x = j;
+                            var y = Math.sqrt(3)/2*i;
+                            var z = 0;
+                            pitches_array[k] = ((j*7)+i/2)%12;
+                        }
+                        else{
+                            var x = j+1/2;
+                            var y = Math.sqrt(3)/2*i;
+                            var z = 0;
+                            pitches_array[k] = ((j*7+4)+ (i-1)/2)%12;
+                        }
+                        particlePositions[ k * 3     ] = x;
+                        particlePositions[ k * 3 + 1 ] = y;
+                        particlePositions[ k * 3 + 2 ] = z;
+                        
+                        indices_array[k] = k;
+                        k++;
+                        }
+				}
+                
+				particles.addAttribute( 'position', new THREE.DynamicBufferAttribute( particlePositions, 3 ) );
+                particles.addAttribute( 'index', new THREE.BufferAttribute( new Uint16Array( indices_array ), 1 ) );
+				// create the particle system
+				pointCloud = new THREE.PointCloud( particles, pMaterial );
+				group.add( pointCloud );
+                
+                triangles = new THREE.Geometry();
+                for (var i = 0; i < num_of_particles; i++){
+                    var v = new THREE.Vector3(particlePositions[ i * 3 ], particlePositions[ i * 3 + 1 ],particlePositions[ i * 3 + 2 ]);
+                    triangles.vertices.push(v);
+                }
+                var ind = 0;
+                for (var j = 0; j < num_of_lines-1; j++){
+                    var k = j * num_of_points_per_line
+                    for (var i = 0; i < num_of_points_per_line-1; i++){
+                        if (j%2 ==0){
+                            triangles.faces.push(new THREE.Face3(k+i+0,k+i+1,k+i+num_of_points_per_line));
+                            var v1 = [k+i+0,k+i+1,k+i+num_of_points_per_line];
+                            triangles.faces.push(new THREE.Face3(k+i+num_of_points_per_line,k+i+num_of_points_per_line+1,k+i+1));
+                            var v2 = [k+i+num_of_points_per_line,k+i+num_of_points_per_line+1,k+i+1];
+                        }else{
+                            triangles.faces.push(new THREE.Face3(k+i+0,k+i+1,k+i+num_of_points_per_line+1));
+                            var v1 = [k+i+0,k+i+1,k+i+num_of_points_per_line+1];
+                            triangles.faces.push(new THREE.Face3(k+i+num_of_points_per_line,k+i+num_of_points_per_line+1,k+i));
+                            var v2 = [k+i+num_of_points_per_line,k+i+num_of_points_per_line+1,k+i];
+                        }
+                        faces[ind] = v1;
+                        faces[ind + 1] = v2;
+                        ind += 2;
+                    }
+                }
+               for ( var i = 0; i < triangles.faces.length; i ++ ) {
+                    triangles.faces[ i ].color.setHex( 1* 0xbababa );
+                }
+              
+                var material = new THREE.MeshBasicMaterial( {
+					color: 0xaaaaaa, specular: 0xbababa, shininess: 250,
+					side: THREE.DoubleSide,vertexColors: THREE.FaceColors
+				} );
+                triangles.computeFaceNormals();
+                mesh = new THREE.Mesh( triangles, material  );
+                mesh.geometry.dynamic = true;
+                group.add(mesh)
+                edges_helper = new THREE.EdgesHelper( mesh, 0x00ff00 );
+                group.add(edges_helper);
+                
+                var ematerial = new THREE.MeshBasicMaterial( {
+				    color: 0x00ff00, specular: 0x00ffff, shininess: 250,
+					side: THREE.DoubleSide, wireframe:true
+                });
+                
+                edges = new THREE.Mesh( triangles, ematerial  );
+                group.add(edges);
+                
+                var playing_char = ["a","w","s","e","d","f","t","g","y","h","u","j","k","o","l","p","ò"];
+                for (var i = 0; i < playing_char.length; i++){
+                    cur_playing[playing_char[i]] = 0;
+                }
+                
+              window.onload = function ()
+	            {
+					MIDI.loadPlugin(function ()
+	                {
+	                    player.timeWarp = 1.0; // speed the song is played back
+//                        player.loadFile("midi/" + "jeuxdeau.mid");      
+	                    player.addListener(function(data)
+	                    {
+//	                        var pianoKey = data.note;
+                            
+                            message = data.message;
+                            if (message === 144){
+                            
+                                pitch.push(data.note);
+                                }else{pitch = [];}
+                            
+                        
+                            
+	                    });
+					});
+				}
+                
+			  	var geometryplane = new THREE.PlaneGeometry( 15, 10, 0 );
+				var planematerial = new THREE.MeshLambertMaterial( {color: 0x0000ff, side: THREE.DoubleSide} );
+				planematerial.transparent = true;
+				planematerial.opacity = 0.5;
+				plane = new THREE.Mesh( geometryplane, planematerial );
+				plane.position.set(5.8,5,-1);
+				plane.visible = false;
+				group.add( plane );
+			  
+                
+                renderer = new THREE.WebGLRenderer( { antialias: true, alpha:true} );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				renderer.gammaInput = true;
+				renderer.gammaOutput = true;
+
+				container.appendChild( renderer.domElement );
+
+				//
+
+				stats = new Stats();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.top = '0px';
+				container.appendChild( stats.domElement );
+
+                
+                
+				window.addEventListener( 'resize', onWindowResize, false );
+                
+               
+                
+            }
+            
+            function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+            
+            function play(note) {
+//                    MIDI.setVolume(0, 127);
+                    MIDI.noteOn(0, note, velocity, delay);
+            }
+            
+             function stop(note) {
+                    MIDI.noteOff(0, note, delay);            
+            }
+            
+            function disp_pref(){
+                //get the values of the vertices on the mesh
+                var sk_0 = mesh.geometry.vertices;
+                //get the faces of the mesh
+                var sk_2 = faces;
+                var height = [];
+				var h_val = [];
+                var sort_indices = [];
+				var pref_pitches = [];
+				//statistics
+				for (var i = 0; i < 12; i++){
+
+                    height[i] = [ i , sk_0[i].z ];
+					h_val[i] =  sk_0[i].z;
+                }
+				var fifths = [[0,'C'] ,[7,'G'] ,[2,'D'] ,[9,'A'] ,[4,'E'] ,[11,'B'] ,[6,'F#'] ,[1,'C#'] ,[8,'Ab'] ,[3,'Eb'] ,[10,'Bb'] ,[5,'F'] ];
+				var aver = eval(h_val.join('+'))/12;
+				//sort the vertices using their height and save the
+//                //corresponding permutation of the indices in the array
+//                //sort_indices
+                height.sort(function(x,y){return x[1] - y[1] })
+              
+                for (var i = 0; i < height.length; i++){
+                
+                    sort_indices[i] = height[i][0];
+					pref_pitches[i] = fifths[height[i][0]];
+                
+                }
+				
+				var soil_pref = [];
+				var s = 0;
+				var max_h = height[height.length-1][1];
+				soil_pref[0] = height[height.length-1];
+				for (var i = height.length-1; i > 0; i-- ){
+				
+					if (height[i][1] > max_h/2){
+					
+						soil_pref[s] = height[i];
+						s++;
+					
+					}
+				
+				}
+				
+				soil_pref.sort(function(x,y){return x[1] - y[1] })
+				console.log(soil_pref)
+				var sort_soil_indices = [];
+				var pref_soil_pitches = [];
+				var pref_heights = [];
+				for (var i = 0; i < soil_pref.length; i++){
+                	
+                    sort_soil_indices[i] = fifths[soil_pref[i][0]][0];
+					pref_soil_pitches[i] = fifths[soil_pref[i][0]][1];
+					pref_heights[i] = soil_pref[i][1];
+                
+                }
+				console.log(sort_soil_indices , pref_soil_pitches, pref_heights);
+//				var distances = [];
+//				var t = 0;
+//				var distmat = {};
+//				for (var i = sort_soil_indices.length -1; i > 0 ; i--){
+//					var d = 0;
+//					for (var j = i-1; j >= 0; j--){
+//						// fix javascript bug on mod for neg numbers
+//						distances[d] = (((sort_soil_indices[j] - sort_soil_indices[i] ) % 12) +12)%12;
+//						d++;
+//					}	
+//					distmat[t] = distances;
+//					distances = [];
+//					t++;
+//				}
+//				console.log(distmat)
+				var material = new THREE.PointCloudMaterial( {
+					color: 0x000000,
+					size: 5,
+					transparent: false,
+					sizeAttenuation: false
+				} );
+				
+				shadow =  new THREE.Geometry();
+
+				for (var i = 0; i < sort_soil_indices.length; i++){
+					var pref_pitch = sort_soil_indices[i];
+					for (var j = 0; j < pitches_array.length; j ++){
+						if (pitches_array[j] == pref_pitch){
+                    		var v = new THREE.Vector3(particlePositions[ j * 3 ], particlePositions[ j * 3 + 1 ],0);
+							shadow.vertices.push(v);
+						}
+					}
+				}
+				
+				mesh_s = new THREE.PointCloud( shadow, material );
+                mesh_s.geometry.dynamic = true;
+                group.add(mesh_s)
+//				var ord_pitch = [[0 , 'C'] , [1 , 'C#'] , [2 , 'D'] , [3 , 'D#'] , [4 , 'E'] , [5 , 'F'] , [6 , 'F#'] , [7 , 'G'] , [8 , 'G#'] , [9 , 'A'] , [10 , 'A#'] , [11 , 'B']];
+				
+				
+				
+//                for (var i = 0; i < sk_0.length; i++){
+//
+//                    height[i] = [ i , sk_0[i].z ] ;
+//                }
+//                //sort the vertices using their height and save the
+//                //corresponding permutation of the indices in the array
+//                //sort_indices
+//                height.sort(function(x,y){return x[1] - y[1] })
+//              
+//                for (var i = 0; i < height.length; i++){
+//                
+//                    sort_indices[i] = height[i][0];
+//                
+//                }
+//                
+//                console.log(height,sort_indices, sk_2)
+                
+       
+            }
+
+			function animate() {
+				requestAnimationFrame( animate );
+
+				stats.update();
+				render();
+
+			}
+            
+            function key(character, note){
+                  var c = 0.002;
+                 if( keyboard.pressed(character) ){
+                     for (var i = 0; i < pitches_array.length; i++){
+                         if (pitches_array[i]==note%12){
+                            particlePositions[i*3+2] += c;
+                            mesh.geometry.vertices[i].z += c;
+                         }    
+                    }
+
+                     if( cur_playing[character] == 0){
+                         cur_playing[character] = 1;
+                         play(note);
+                     }
+                 }else if (cur_playing[character] == 1){ 
+                     cur_playing[character] = 0; 
+                     stop(note);
+                 }   
+            }
+            
+            
+            function undeform(){
+            var c = 0.002;
+            for (var i = 0; i < pitches_array.length; i++){
+                    particlePositions[i*3+2] = 0;
+                    mesh.geometry.vertices[i].z = 0;
+                 }    
+            }
+                 
+            
+            
+            function playerdef(pitch){
+                c = 0.002
+                if( message === 144){
+                     for (var i = 0; i < pitches_array.length; i++){
+                         if (pitches_array[i]==pitch%12){
+                            particlePositions[i*3+2] += c;
+                            mesh.geometry.vertices[i].z += c;
+                            
+                         } 
+                    }
+                }
+                
+            }
+
+			function render() {
+                key("a", 60);
+                key("w", 61);
+                key("s", 62);
+                key("e", 63);
+                key("d", 64);
+                key("f", 65);
+                key("t", 66);
+                key("g", 67);
+                key("y", 68);
+                key("h", 69);
+                key("u", 70);
+                key("j", 71);
+                key("k", 72);
+                key("o", 73);
+                key("l", 74);
+                key("p", 75);
+                key("ò", 76);
+                
+              if (message === 144){
+                    for (var i = 0; i<pitch.length; i++){
+                    playerdef(pitch[i])
+                    }
+              }
+                
+                pointCloud.geometry.attributes.position.needsUpdate = true;
+                mesh.geometry.verticesNeedUpdate = true;
+                mesh.geometry.colorsNeedUpdate = true;
+				if (mesh_s){
+                	mesh_s.geometry.verticesNeedUpdate = true;
+				}
+				plane.position.z = effectController.filt_height;
+				renderer.render( scene, camera );
+                
+			}
+
+		</script>
+	</body>
+</html>
