@@ -1,7 +1,5 @@
 generator/sf2/*
 generator/ruby/soundfont*
-**/source*
-**/build*
 */soundfont/*
 !examples/soundfont/acoustic_grand_piano*
 !examples/soundfont/synth_drum*
@@ -15,4 +13,3 @@ npm-debug.log
 # FORMATS
 *.gz
 *.DS_Store
-
